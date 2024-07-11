@@ -54,10 +54,10 @@ public class PrivateEventController {
     }
 
     @PatchMapping("/{userId}/events/{eventId}/requests")
-    public EventRequestStatusUpdateResult updateEventRequest
-            (@PathVariable Long userId,
-             @PathVariable Long eventId,
-             @Valid @RequestBody EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
+    public EventRequestStatusUpdateResult updateEventRequest(
+            @PathVariable Long userId,
+            @PathVariable Long eventId,
+            @Valid @RequestBody EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
 
         return requestService.updateRequestsByUserEvent(userId, eventId, eventRequestStatusUpdateRequest);
     }
@@ -82,4 +82,5 @@ public class PrivateEventController {
     ) {
         return commentService.updateComment(userId, eventId, commentId, comment);
     }
+
 }
