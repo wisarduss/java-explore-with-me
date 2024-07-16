@@ -60,4 +60,6 @@ public class PrivateEventController {
         return requestService.updateRequestsByUserEvent(userId, eventId, eventRequestStatusUpdateRequest);
     }
 
+
+
 }
