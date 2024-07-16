@@ -15,7 +15,6 @@
         <module>stats-model</module>
         <module>stats-client</module>
         <module>stats-server</module>
-        <module>../ewm-service/service</module>
     </modules>
 
     <properties>
