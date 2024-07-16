@@ -8,9 +8,6 @@ import ru.practicum.entity.Category;
 import ru.practicum.entity.Event;
 import ru.practicum.model.dto.*;
 
-import java.util.Collections;
-import java.util.stream.Collectors;
-
 @UtilityClass
 public class EventMapper {
 
