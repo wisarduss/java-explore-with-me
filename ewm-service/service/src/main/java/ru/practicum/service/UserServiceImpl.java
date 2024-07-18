@@ -3,6 +3,7 @@ package ru.practicum.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.entity.User;
 import ru.practicum.exception.IdNotFoundException;
 import ru.practicum.model.dto.UserDto;
@@ -15,17 +16,20 @@ import static ru.practicum.utils.CustomPageRequest.pageRequestOf;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public UserDto save(UserDto user) {
         return modelMapper.map(userRepository.save(modelMapper.map(user, User.class)), UserDto.class);
     }
 
     @Override
+    @Transactional
     public void delete(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + userId + " не найден"));

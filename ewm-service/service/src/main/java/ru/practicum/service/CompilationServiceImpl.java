@@ -3,6 +3,7 @@ package ru.practicum.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.entity.Compilation;
 import ru.practicum.entity.Event;
 import ru.practicum.exception.IdNotFoundException;
@@ -20,6 +21,7 @@ import static ru.practicum.utils.CustomPageRequest.pageRequestOf;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CompilationServiceImpl implements CompilationService {
 
     private final CompilationRepository compilationRepository;
@@ -27,6 +29,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public CompilationDto save(NewCompilationRequestDto newCompilationRequestDto) {
         List<Event> events = null;
         if (newCompilationRequestDto.getEvents() != null && !newCompilationRequestDto.getEvents().isEmpty()) {
@@ -39,6 +42,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
+    @Transactional
     public CompilationDto update(Long compId, UpdateCompilationRequestDto body) {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new IdNotFoundException("Подборки события с id = " + compId + " не найдено"));
@@ -59,6 +63,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
+    @Transactional
     public void delete(Long compId) {
         compilationRepository.findById(compId)
                 .orElseThrow(() -> new IdNotFoundException("Подборки события с id = " + compId + " не найдено"));

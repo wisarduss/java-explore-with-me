@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.StatsClient;
 import ru.practicum.entity.Category;
 import ru.practicum.entity.Event;
@@ -34,7 +35,9 @@ import static ru.practicum.utils.CustomPageRequest.pageRequestOf;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class EventServiceImpl implements EventService {
+
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
@@ -164,6 +167,7 @@ public class EventServiceImpl implements EventService {
 
     @SneakyThrows
     @Override
+    @Transactional
     public EventFullDto update(Long eventId, UpdateEventAdminRequestDto updateEventAdminRequestDto) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IdNotFoundException("событие с id = " + eventId + " не найдено"));
@@ -261,6 +265,7 @@ public class EventServiceImpl implements EventService {
 
     @SneakyThrows
     @Override
+    @Transactional
     public EventFullDto create(Long userId, NewEventDto newEventDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + userId + " не найден"));
@@ -304,6 +309,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @SneakyThrows
+    @Transactional
     public EventFullDto updateUserEvent(Long userId, Long eventId, UpdateEventUserRequestDto updateEventUserRequestDto) {
 
         User user = userRepository.findById(userId)
