@@ -37,8 +37,8 @@ public class AdminEventController {
 
     @PatchMapping("/{eventId}")
     public EventFullDto updateEvent(@PathVariable Long eventId,
-                                    @Valid @RequestBody UpdateEventAdminRequestDto UpdateEventAdminRequestDto) {
-        return eventService.update(eventId, UpdateEventAdminRequestDto);
+                                    @Valid @RequestBody UpdateEventAdminRequestDto body) {
+        return eventService.update(eventId, body);
     }
 
 }
