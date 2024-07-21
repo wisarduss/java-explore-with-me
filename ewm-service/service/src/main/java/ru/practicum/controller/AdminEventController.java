@@ -2,9 +2,11 @@ package ru.practicum.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.model.dto.EventFullDto;
 import ru.practicum.model.dto.UpdateEventAdminRequestDto;
+import ru.practicum.service.CommentService;
 import ru.practicum.service.EventService;
 
 import javax.validation.Valid;
@@ -20,6 +22,7 @@ import static ru.practicum.utils.Constants.DATE_TIME_PATTERN;
 public class AdminEventController {
 
     private final EventService eventService;
+    private final CommentService commentService;
 
     @GetMapping
     public List<EventFullDto> findEvents(
@@ -39,6 +42,12 @@ public class AdminEventController {
     public EventFullDto updateEvent(@PathVariable Long eventId,
                                     @Valid @RequestBody UpdateEventAdminRequestDto body) {
         return eventService.update(eventId, body);
+    }
+
+    @DeleteMapping("/{eventId}/comment/{commentId}/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteComment(@PathVariable Long eventId, @PathVariable Long commentId) {
+        commentService.deleteComment(eventId, commentId);
     }
 
 }
