@@ -1,8 +1,10 @@
 package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.entity.Comment;
 import ru.practicum.entity.Event;
 import ru.practicum.entity.User;
@@ -17,6 +19,8 @@ import ru.practicum.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+@Transactional
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
@@ -41,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
                 .event(event)
                 .text(body.getText())
                 .build();
-
+        log.debug("Коммеентарий создан");
         return modelMapper.map(commentRepository.save(comment), CommentDto.class);
     }
 
@@ -63,6 +67,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         comment.setText(body.getText());
+        log.debug("Комментарий изменен");
         return modelMapper.map(commentRepository.saveAndFlush(comment), CommentDto.class);
     }
 
@@ -73,7 +78,7 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.findById(commentId)
                 .orElseThrow(() -> new IdNotFoundException("Комментарий с id = " + commentId + " не найден"));
-
+        log.debug("Комментарий удален");
         commentRepository.deleteById(commentId);
     }
 

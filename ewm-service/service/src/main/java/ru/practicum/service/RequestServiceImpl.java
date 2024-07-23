@@ -1,6 +1,7 @@
 package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.entity.Event;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class RequestServiceImpl implements RequestService {
 
@@ -67,7 +69,7 @@ public class RequestServiceImpl implements RequestService {
             event.setConfirmedRequests(count + 1);
             eventRepository.saveAndFlush(event);
         }
-
+        log.debug("запрос создан");
         return RequestMapper.toRequestDTO(savedRequest);
     }
 
@@ -92,7 +94,7 @@ public class RequestServiceImpl implements RequestService {
 
         request.setStatus(EventRequestStatus.CANCELED);
         Request savedRequest = requestRepository.saveAndFlush(request);
-
+        log.debug("запрос отменен");
         return RequestMapper.toRequestDTO(savedRequest);
     }
 
@@ -101,7 +103,7 @@ public class RequestServiceImpl implements RequestService {
 
         userRepository.findById(userId)
                 .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + userId + " не найден"));
-
+        log.debug("Получены все запросы пользователя");
         return requestRepository.findAllByRequesterId(userId).stream()
                 .map(RequestMapper::toRequestDTO)
                 .collect(Collectors.toList());
@@ -118,6 +120,7 @@ public class RequestServiceImpl implements RequestService {
         if (!event.getInitiator().getId().equals(userId)) {
             throw new ConflictException();
         }
+        log.debug("получены все запросы пользователя по событию");
         return requestRepository.findAllByEventId(eventId).stream()
                 .map(RequestMapper::toRequestDTO)
                 .collect(Collectors.toList());
@@ -174,7 +177,7 @@ public class RequestServiceImpl implements RequestService {
             }
 
         });
-
+        log.debug("запрос пользователя по событию обновлен");
         return RequestMapper.toEventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
     }
 

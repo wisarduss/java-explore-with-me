@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,6 +36,7 @@ import static ru.practicum.utils.CustomPageRequest.pageRequestOf;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class EventServiceImpl implements EventService {
 
@@ -83,7 +85,7 @@ public class EventServiceImpl implements EventService {
             EventFullDto eventFullDTO = EventMapper.toEventFullDto(event);
             result.add(eventFullDTO);
         }
-
+        log.debug("Получено событие по параметрам Admin");
         return result;
     }
 
@@ -160,7 +162,7 @@ public class EventServiceImpl implements EventService {
         for (Event event : events) {
             event.setViews(eventsHits.get(event.getId()));
         }
-
+        log.debug("получено событие по параметрам public");
         return events.stream().map(it -> modelMapper.map(it, EventShortDto.class))
                 .collect(Collectors.toList());
     }
@@ -221,7 +223,7 @@ public class EventServiceImpl implements EventService {
         }
 
         Event result = eventRepository.saveAndFlush(event);
-
+        log.debug("Событие обновлено");
         return EventMapper.toEventFullDto(result);
     }
 
@@ -249,7 +251,7 @@ public class EventServiceImpl implements EventService {
         if (!list.isEmpty()) {
             event.setViews(Long.valueOf(list.get(0).getHits()));
         }
-
+        log.debug("получено событие по id");
         return EventMapper.toEventFullDto(event);
     }
 
@@ -257,7 +259,7 @@ public class EventServiceImpl implements EventService {
     public List<EventShortDto> findEventsByUser(Long userId, Integer from, Integer size) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + userId + " не найден"));
-
+        log.debug("получены события пользователя");
         return eventRepository.findAllByInitiatorId(userId, pageRequestOf(from, size)).stream()
                 .map(it -> modelMapper.map(it, EventShortDto.class))
                 .collect(Collectors.toList());
@@ -287,7 +289,7 @@ public class EventServiceImpl implements EventService {
         event.setState(EventStatus.PENDING);
 
         Event result = eventRepository.saveAndFlush(event);
-
+        log.debug("событие создано");
         return EventMapper.toEventFullDto(result);
     }
 
@@ -303,7 +305,7 @@ public class EventServiceImpl implements EventService {
         if (!event.getInitiator().equals(user)) {
             throw new IdNotFoundException("Событие с id = " + eventId + " не найдено");
         }
-
+        log.debug("получены события пользователя по id");
         return EventMapper.toEventFullDto(event);
     }
 
@@ -361,7 +363,7 @@ public class EventServiceImpl implements EventService {
         }
 
         Event result = eventRepository.saveAndFlush(event);
-
+        log.debug("Обновлены события пользователя");
         return EventMapper.toEventFullDto(result);
     }
 
