@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static ru.practicum.utils.Constants.DATE_TIME_PATTERN;
 
@@ -28,5 +29,7 @@ public class EventShortDto {
     private String title;
 
     private Long views;
+
+    private List<CommentDto> comments;
 
 }

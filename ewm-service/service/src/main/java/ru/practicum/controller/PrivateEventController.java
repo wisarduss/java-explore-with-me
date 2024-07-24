@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.model.dto.*;
+import ru.practicum.service.CommentService;
 import ru.practicum.service.EventService;
 import ru.practicum.service.RequestService;
 
@@ -18,6 +19,7 @@ public class PrivateEventController {
 
     private final EventService eventService;
     private final RequestService requestService;
+    private final CommentService commentService;
 
     @GetMapping("/{userId}/events")
     public List<EventShortDto> findEventsByUser(@PathVariable Long userId,
@@ -60,6 +62,24 @@ public class PrivateEventController {
         return requestService.updateRequestsByUserEvent(userId, eventId, body);
     }
 
+    @PostMapping("/{userId}/events/{eventId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentDto createComment(
+            @PathVariable("userId") Long userId,
+            @PathVariable("eventId") Long eventId,
+            @Valid @RequestBody NewCommentDto comment
+    ) {
+        return commentService.createComment(userId, eventId, comment);
+    }
 
+    @PatchMapping("/{userId}/events/{eventId}/comment/{commentId}")
+    public CommentDto updateComment(
+            @PathVariable("userId") Long userId,
+            @PathVariable("eventId") Long eventId,
+            @PathVariable("commentId") Long commentId,
+            @Valid @RequestBody NewCommentDto comment
+    ) {
+        return commentService.updateComment(userId, eventId, commentId, comment);
+    }
 
 }

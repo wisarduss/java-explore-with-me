@@ -7,6 +7,7 @@ import ru.practicum.model.EventStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -67,5 +68,9 @@ public class Event {
 
     @ColumnDefault("0")
     private Long views;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private List<Comment> comments;
 
 }
